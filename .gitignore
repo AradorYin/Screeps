@@ -1,0 +1,11 @@
+# Generated files in default dir
+/default/*.js
+/default/*.js.map
+
+# idea
+/.idea
+
+# node
+/node_modules
+
+.sync
