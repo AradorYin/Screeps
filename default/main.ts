@@ -1,6 +1,7 @@
 import roleHarvester from './role.harvester';
 import roleUpgrader from "./role.upgrader";
 import roleBuilder from "./role.builder";
+import structureTower from "./structure.tower";
 
 import * as _ from 'lodash';
 import memoryCreep from "./memory.creep";
@@ -13,20 +14,10 @@ module.exports.loop = function () {
         }
     }
 
-    const tower = Game.getObjectById('75ac8225466583487dd49917' as Id<_HasId>) as StructureTower;
-    if(tower) {
-        const closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax
-        });
-        if(closestDamagedStructure) {
-            tower.repair(closestDamagedStructure);
-        }
-
-        const closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        }
-    }
+    const towers: StructureTower[] = _.filter(Game.structures, structure => {
+        return structure.structureType === STRUCTURE_TOWER;
+    }) as StructureTower[];
+    structureTower.run(towers);
 
     const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == memoryCreep.HARVESTER);
     // console.log('Harvesters: ' + harvesters.length);
@@ -35,12 +26,12 @@ module.exports.loop = function () {
     const builders = _.filter(Game.creeps, (creep) => creep.memory.role == memoryCreep.BUILDER);
     // console.log('Builders: ' + builders.length);
 
-    if(harvesters.length < 2) {
+    if(harvesters.length < 4) {
         const newName = 'Harvester' + Game.time;
         console.log('Spawning new harvester: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
             {memory: {role: memoryCreep.HARVESTER}});
-    } else if(upgraders.length < 1) {
+    } else if(upgraders.length < 3) {
         const newName = 'Upgrader' + Game.time;
         console.log('Spawning new upgrader: ' + newName);
         Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName,
