@@ -1,31 +1,42 @@
 let roleHarvester: {
     /** @param {Creep} creep **/
     run(creep: Creep): void;
-}
+    /** @param {Room} room */
+    numHarvester(room: Room): number;
+};
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default roleHarvester = {
-
     run(creep) {
-        if(creep.store.getFreeCapacity() > 0) {
+        if (creep.store.getFreeCapacity() > 0) {
             const sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0], { visualizePathStyle: { stroke: "#ffaa00" } });
             }
-        }
-        else {
+        } else {
             const targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN ||
-                            structure.structureType == STRUCTURE_TOWER) &&
-                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                filter: structure => {
+                    return (
+                        (structure.structureType === STRUCTURE_EXTENSION ||
+                            structure.structureType === STRUCTURE_SPAWN ||
+                            structure.structureType === STRUCTURE_TOWER) &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    );
                 }
             });
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            if (targets.length > 0) {
+                if (creep.transfer(targets[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: "#ffffff" } });
                 }
             }
         }
+    },
+    numHarvester(room): number {
+        let numHarvesters: number = 0;
+        const sources = room.find(FIND_SOURCES);
+
+        numHarvesters += sources.length * 3;
+
+        return numHarvesters;
     }
 };

@@ -1,31 +1,30 @@
-import roleHarvester from './role.harvester';
-import roleUpgrader from "./role.upgrader";
+import MemoryRole from "./memory.creep";
+
 import roleBuilder from "./role.builder";
-import structureTower from "./structure.tower";
+import roleHarvester from "./role.harvester";
+import roleUpgrader from "./role.upgrader";
 import spawnCreeps from "./spawn.creep";
+import structureTower from "./structure.tower";
 
-import * as _ from 'lodash';
-import memoryCreep from "./memory.creep";
-
-module.exports.loop = function () {
-    for(const name in Memory.creeps) {
-        if(!Game.creeps[name]) {
+export function loop() {
+    for (const name in Memory.creeps) {
+        if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log(`Clearing non-existing creep memory: ${name}`);
         }
     }
 
     const myStructureKeys = Object.keys(Game.structures);
-    const myStructures: Structure<StructureConstant>[] = myStructureKeys.map(key => Game.structures[key]);
+    const myStructures: Structure[] = myStructureKeys.map(key => Game.structures[key]);
 
     const spawns: StructureSpawn[] = [];
     const towers: StructureTower[] = [];
 
-    for(const struct of myStructures) {
-        if(struct.structureType === STRUCTURE_SPAWN) {
+    for (const struct of myStructures) {
+        if (struct.structureType === STRUCTURE_SPAWN) {
             spawns.push(struct as StructureSpawn);
         }
-        if(struct.structureType === STRUCTURE_TOWER) {
+        if (struct.structureType === STRUCTURE_TOWER) {
             towers.push(struct as StructureTower);
         }
     }
@@ -35,15 +34,15 @@ module.exports.loop = function () {
     });
     structureTower.run(towers);
 
-    for(const name in Game.creeps) {
+    for (const name in Game.creeps) {
         const creep = Game.creeps[name];
-        if(creep.memory.role == 'harvester') {
+        if (creep.memory.role === MemoryRole.HARVESTER.valueOf()) {
             roleHarvester.run(creep);
         }
-        if(creep.memory.role == 'upgrader') {
+        if (creep.memory.role === MemoryRole.UPGRADER.valueOf()) {
             roleUpgrader.run(creep);
         }
-        if(creep.memory.role == 'builder') {
+        if (creep.memory.role === MemoryRole.BUILDER.valueOf()) {
             roleBuilder.run(creep);
         }
     }
