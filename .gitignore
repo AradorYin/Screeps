@@ -1,0 +1,10 @@
+# Generated files in default dir
+**/*.js
+**/*.js.map
+
+# node
+/node_modules
+
+.sync
+
+.vs/
