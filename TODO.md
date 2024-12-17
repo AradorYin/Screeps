@@ -12,7 +12,7 @@ Refactor/Add functionality to Harvester/Upgrader/Builder
 * Add source targeting
 
 Linting
-* ESLint
-* Prettier
++ ESLint
++ Prettier
 
 Refactor codebase for easier understanding and maintainability.

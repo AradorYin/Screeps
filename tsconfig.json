@@ -12,6 +12,6 @@
     "allowUnreachableCode": false,
     "types": ["node", "screeps"]
   },
-  "include": ["./**/*.ts", "./**/*.d.ts"],
+  "include": ["./**/*.ts", "./**/*.d.ts", ".eslintrc.js"],
   "exclude": ["node_modules", "dist", ".git"]
 }

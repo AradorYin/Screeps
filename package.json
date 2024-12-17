@@ -2,6 +2,15 @@
   "dependencies": {
     "@types/lodash": "^4.17.13",
     "@types/screeps": "^3.3.8",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "@typescript-eslint/typescript-estree": "^8.18.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.4.2",
     "screeps-profiler": "^2.0.1"
   },
   "devDependencies": {
