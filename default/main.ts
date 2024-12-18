@@ -3,17 +3,34 @@ import MemoryRole from "./memory.creep";
 import roleBuilder from "./roleBuilder";
 import roleHarvester from "./roleHarvester";
 import roleUpgrader from "./roleUpgrader";
-
-// eslint-disable-next-line import/no-unresolved, sort-imports
-import * as _ from "lodash";
+import spawnCreeps from "./spawner";
 
 export function loop() {
+    /*
+    The below is for clearing up memory. Later, this will change to be more advanced memory management with using the CPU bucket.
+    * Removal of creep names
+    */
     for (const name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log("Clearing non-existing creep memory: ", name);
         }
     }
+
+    const myStructureKeys = Object.keys(Game.structures);
+    const myStructures: Structure<StructureConstant>[] = myStructureKeys.map(key => Game.structures[key]);
+
+    const spawns: StructureSpawn[] = [];
+
+    for (const struct of myStructures) {
+        if (struct.structureType === STRUCTURE_SPAWN) {
+            spawns.push(struct as StructureSpawn);
+        }
+    }
+
+    spawns.forEach(spawn => {
+        spawnCreeps.spawn(spawn);
+    });
 
     const tower = Game.getObjectById("914f4d1ec22dafd8d040197c" as Id<_HasId>) as StructureTower;
     if (tower) {
@@ -30,42 +47,11 @@ export function loop() {
         }
     }
 
-    // const builders = _.filter(Game.creeps, (creep) => creep.memory.role === MemoryRole.BUILDER.valueOf());
-    // console.log('Builders: ' + builders.length);
-    const harvesters = _.filter(Game.creeps, creep => creep.memory.role === MemoryRole.HARVESTER.valueOf());
-    // console.log('Harvesters: ' + harvesters.length);
-    const upgraders = _.filter(Game.creeps, creep => creep.memory.role === MemoryRole.UPGRADER.valueOf());
-    // console.log('Upgraders: ' + upgraders.length);
+    /*
+    The below is for setting the roles of the creeps to the creep memory.
 
-    if (harvesters.length < 2) {
-        const newName = "Harvester" + Game.time;
-        console.log("Spawning new harvester: " + newName);
-        Game.spawns.Spawn1.spawnCreep([WORK, CARRY, MOVE], newName, {
-            memory: { role: MemoryRole.HARVESTER.valueOf() }
-        });
-    } else if (upgraders.length < 3) {
-        const newName = "Upgrader" + Game.time;
-        console.log("Spawning new upgrader: " + newName);
-        Game.spawns.Spawn1.spawnCreep([WORK, CARRY, MOVE], newName, {
-            memory: { role: MemoryRole.UPGRADER.valueOf() }
-        });
-    }
-    // else if(builders.length < 1) {
-    //     const newName = 'Builder' + Game.time;
-    //     console.log('Spawning new builder: ' + newName);
-    //     Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE], newName, {memory: {role: memoryCreep.BUILDER.valueOf()}});
-    // }
-
-    if (Game.spawns.Spawn1.spawning) {
-        const spawningCreep = Game.creeps[Game.spawns.Spawn1.spawning.name];
-        Game.spawns.Spawn1.room.visual.text(
-            "🛠️" + spawningCreep.memory.role,
-            Game.spawns.Spawn1.pos.x + 1,
-            Game.spawns.Spawn1.pos.y,
-            { align: "left", opacity: 0.8 }
-        );
-    }
-
+    TODO: Move this into a class designed for handling creeps, role setting, spawning, defense
+    */
     for (const name in Game.creeps) {
         const creep = Game.creeps[name];
         if (creep.memory.role === MemoryRole.HARVESTER.valueOf()) {
