@@ -10,7 +10,7 @@ let creepSpawn: {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default creepSpawn = {
     spawn(spawn) {
-        // const builders = _.filter(Game.creeps, creep => creep.memory.role === MemoryRole.BUILDER.valueOf());
+        const builders = _.filter(Game.creeps, creep => creep.memory.role === MemoryRole.BUILDER.valueOf());
         // console.log('Builders: ' + builders.length);
         const harvesters = _.filter(Game.creeps, creep => creep.memory.role === MemoryRole.HARVESTER.valueOf());
         // console.log('Harvesters: ' + harvesters.length);
@@ -18,7 +18,8 @@ export default creepSpawn = {
         // console.log('Upgraders: ' + upgraders.length);
 
         createCreep(harvesters, "Harvesters", MemoryRole.HARVESTER, 2, [WORK, CARRY, MOVE]);
-        createCreep(upgraders, "Upgraders", MemoryRole.UPGRADER, 3, [WORK, CARRY, CARRY, MOVE, MOVE]);
+        createCreep(upgraders, "Upgraders", MemoryRole.UPGRADER, 4, [WORK, CARRY, CARRY, MOVE, MOVE]);
+        createCreep(builders, "Builders", MemoryRole.BUILDER, 2, [WORK, CARRY, MOVE]);
 
         if (spawn.spawning) {
             const spawningCreep = Game.creeps[spawn.spawning.name];
